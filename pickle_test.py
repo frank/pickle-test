@@ -16,12 +16,15 @@ def delete_contact(contacts):
         return contacts
     else:
         print_contact_list(contacts)
-        idx = int(input("Please type the index of the contact you want to delete: "), 10)
-        if idx in range(0, len(contacts)):
-            del contacts[idx]
-        else:
-            print("Contact not found")
-        return contacts
+        try:
+            idx = int(input("Please type the index of the contact you want to delete: "), 10)
+            if idx in range(0, len(contacts)):
+                del contacts[idx]
+            else:
+                print("Contact not found")
+            return contacts
+        except ValueError:
+            print("Please only type numbers")
 
 
 def print_contact_list(contacts):
@@ -36,18 +39,18 @@ def save(contacts):
     if not contacts:
         print("No contact to save")
         return
-    output = open('save_file.pkl', 'wb')
-    pickle.dump(contacts, output)
+    with open('save_file.pkl', 'wb') as output:
+        pickle.dump(contacts, output)
     print("Contacts saved")
 
 
 def load():
-    if os.path.exists('save_file.pkl'):
-        source = open('save_file.pkl', 'rb')
-        contacts = pickle.load(source)
+    try:
+        with open('save_file.pkl', 'rb') as source:
+            contacts = pickle.load(source)
         print("Contacts loaded")
         return contacts
-    else:
+    except FileNotFoundError:
         print("Save file not found")
 
 
